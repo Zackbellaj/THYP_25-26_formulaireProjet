@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Trombinoscope - Master 2 THYP</title>
+  <style>
+    body { font-family: Arial; background: #f9f9f9; margin: 20px; }
+    h1 { text-align: center; }
+    .cards { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+    .card { background: white; border: 1px solid #ccc; border-radius: 8px; width: 300px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .card h2 { font-size: 18px; margin: 0 0 5px; }
+    .card h3 { font-size: 15px; color: #555; margin: 0 0 10px; }
+    .card p { font-size: 14px; margin: 5px 0; }
+    .timestamp { font-size: 12px; color: gray; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>Trombinoscope - Promotion 2025/2026</h1>
+<div class="cards" id="etuCards"></div>
+
+<script>
+const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRLJ9CjeHWp4cZv9RI9SJEGUiA4U55TocqjOvFtKIlIvVviIuuFbHjSDVHXZCB9hXwGmjmO6hhfATg/pub?gid=621225106&single=true&output=csv";
+
+// Fonction simple pour parser un CSV
+function parseCSV(str) {
+  const rows = str.trim().split("\n");
+  return rows.map(r => r.split(","));
+}
+
+fetch(url)
+  .then(res => res.text())
+  .then(csv => {
+    const data = parseCSV(csv);
+    const headers = data[0];
+    const rows = data.slice(1);
+
+    const container = document.getElementById("etuCards");
+
+    rows.forEach(r => {
+      const obj = {};
+      headers.forEach((h,i) => obj[h] = r[i] || "");
+
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <h2>${obj["Prénom"]} ${obj["Nom"]}</h2>
+        <h3>${obj["Titre du projet"]}</h3>
+        <p>${obj["Description du Projet"]}</p>
+        <p><strong>Technologies :</strong> ${obj["Technologies utilisées"]}</p>
+        <div class="timestamp">Ajouté le : ${obj["Timestamp"]}</div>
+      `;
+      container.appendChild(card);
+    });
+  })
+  .catch(err => console.error("Erreur CSV:", err));
+</script>
+
+</body>
+</html>
