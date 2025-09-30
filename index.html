@@ -44,12 +44,12 @@ fetch(url)
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-        <h2>${obj["Prénom"]} ${obj["Nom"]}</h2>
-        <h3>${obj["Titre du Projet"]}</h3>
-        <p>${obj["Description du Projet"]}</p>
-        <p><strong>Technologies :</strong> ${obj["  Technologies Utilisées"]}</p>
-        <div class="timestamp">Ajouté le : ${obj["Timestamp"]}</div>
-      `;
+  <h2>${obj["Prénom"]} ${obj["Nom"]}</h2>
+  <h3>${obj["Titre du Projet"]}</h3>
+  <p>${obj["Description du Projet"]}</p>
+  <p><strong>Technologies :</strong> ${obj["Technologies Utilisées"]}</p>
+  <div class="timestamp">Ajouté le : ${obj["Timestamp"]}</div>
+`;
       container.appendChild(card);
     });
   })
