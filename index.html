@@ -18,43 +18,31 @@
 
 <h1>Projets Choisis</h1>
 <div class="cards" id="etuCards"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
 
 <script>
-const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRLJ9CjeHWp4cZv9RI9SJEGUiA4U55TocqjOvFtKIlIvVviIuuFbHjSDVHXZCB9hXwGmjmO6hhfATg/pub?gid=621225106&single=true&output=csv";
-
-// Fonction simple pour parser un CSV
-function parseCSV(str) {
-  const rows = str.trim().split("\n");
-  return rows.map(r => r.split(","));
-}
-
+  const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRLJ9CjeHWp4cZv9RI9SJEGUiA4U55TocqjOvFtKIlIvVviIuuFbHjSDVHXZCB9hXwGmjmO6hhfATg/pub?gid=621225106&single=true&output=csv";
 fetch(url)
   .then(res => res.text())
   .then(csv => {
-    const data = parseCSV(csv);
-    const headers = data[0];
-    const rows = data.slice(1);
+    const data = Papa.parse(csv, { header: true }).data;
 
     const container = document.getElementById("etuCards");
-
-    rows.forEach(r => {
-      const obj = {};
-      headers.forEach((h,i) => obj[h] = r[i] || "");
-
+    data.forEach(obj => {
+      if(!obj["Prénom"]) return; // ignorer lignes vides
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-  <h2>${obj["Prénom"]} ${obj["Nom"]}</h2>
-  <h3>${obj["Titre du Projet"]}</h3>
-  <p>${obj["Description du Projet"]}</p>
-  <p><strong>Technologies :</strong> ${obj["Technologies Utilisées"]}</p>
-  <div class="timestamp">Ajouté le : ${obj["Timestamp"]}</div>
-`;
+        <h2>${obj["Prénom"]} ${obj["Nom"]}</h2>
+        <h3>${obj["Titre du Projet"]}</h3>
+        <p>${obj["Description du Projet"]}</p>
+        <p><strong>Technologies :</strong> ${obj["Technologies Utilisées"]}</p>
+        <div class="timestamp">Ajouté le : ${obj["Timestamp"]}</div>
+      `;
       container.appendChild(card);
     });
-  })
-  .catch(err => console.error("Erreur CSV:", err));
-</script>
+  });
 
 </body>
 </html>
